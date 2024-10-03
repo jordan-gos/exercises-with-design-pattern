@@ -1,95 +1,93 @@
-// import { Book, Library, BookSearch } from '../../Solid/1.Srp/sample';
+import {
+  PaymentProcessor,
+  CreditCardPayment,
+  PayPalPayment,
+  CashPayment,
+  handlePayment,
+  handleCashPayment,
+} from '../../Solid/3.Lsp/main';
 
-// describe('Library', () => {
-//     let library: Library;
-//     let book1: Book;
-//     let book2: Book;
+describe('PaymentProcessor', () => {
+  test('should process payment correctly', () => {
+    const paymentProcessor = new PaymentProcessor();
+    console.log = jest.fn();
 
-//     beforeEach(() => {
-//         library = new Library();
-//         book1 = new Book('Clean Code', 'Edric Cao', 2023);
-//         book2 = new Book('Design Pattern', 'Edric Cao', 2022);
-//     });
+    paymentProcessor.processPayment(100);
 
-//     test('should add a book to the library', () => {
-//         library.addBook(book1);
-//         expect(library.getListBooks()).toContain(book1);
-//     });
+    expect(console.log).toHaveBeenCalledWith('Processing payment of $100');
+  });
+});
 
-//     test('should remove a book by title from the library', () => {
-//         library.addBook(book1);
-//         library.addBook(book2);
-//         library.removeBook('Clean Code');
-//         expect(library.getListBooks()).not.toContain(book1);
-//         expect(library.getListBooks()).toContain(book2);
-//     });
+describe('CreditCardPayment', () => {
+  test('should process credit card payment correctly', () => {
+    const creditCardPayment = new CreditCardPayment();
+    console.log = jest.fn();
 
-//     test('should not remove any book if title not found', () => {
-//         library.addBook(book1);
-//         library.removeBook('Nonexistent Book');
-//         expect(library.getListBooks().length).toBe(1);
-//         expect(library.getListBooks()).toContain(book1);
-//     });
+    creditCardPayment.processPayment(100);
 
-//     test('should return the total number of books in the library', () => {
-//         library.addBook(book1);
-//         library.addBook(book2);
-//         expect(library.getListBooks().length).toBe(2);
-//     });
+    expect(console.log).toHaveBeenCalledWith(
+      'Processing credit card payment of $100'
+    );
+    expect(console.log).toHaveBeenCalledWith(
+      'Validating credit card details...'
+    );
+    expect(console.log).toHaveBeenCalledWith('Charging the credit card...');
+  });
+});
 
-//     test('should return an empty list when no books are added', () => {
-//         expect(library.getListBooks().length).toBe(0);
-//     });
-// });
+describe('PayPalPayment', () => {
+  test('should process PayPal payment correctly', () => {
+    const payPalPayment = new PayPalPayment();
+    console.log = jest.fn();
 
-// describe('BookSearch', () => {
-//     let books: Book[];
-//     let search: BookSearch;
+    payPalPayment.processPayment(200);
 
-//     beforeEach(() => {
-//         books = [
-//             new Book('Clean Code', 'Edric Cao', 2023),
-//             new Book('Design Pattern', 'Edric Cao', 2022),
-//             new Book('Refactoring', 'Martin Fowler', 2018),
-//         ];
-//         search = new BookSearch(books);
-//     });
+    expect(console.log).toHaveBeenCalledWith(
+      'Processing PayPal payment of $200'
+    );
+    expect(console.log).toHaveBeenCalledWith('Redirecting to PayPal...');
+    expect(console.log).toHaveBeenCalledWith(
+      'Completing PayPal transaction...'
+    );
+  });
+});
 
-//     test('should find a book by title', () => {
-//         const book = search.getBookByTitle('Clean Code');
-//         expect(book).toBeDefined();
-//         expect(book?.author).toBe('Edric Cao');
-//     });
+describe('CashPayment', () => {
+  test('should process cash payment correctly and throw an error', () => {
+    const cashPayment = new CashPayment();
 
-//     test('should return undefined when no book matches the title', () => {
-//         const book = search.getBookByTitle('Nonexistent Book');
-//         expect(book).toBeUndefined();
-//     });
+    console.log = jest.fn();
+    console.error = jest.fn();
 
-//     test('should return books by author', () => {
-//         const authorBooks = search.getBooksByAuthor('Edric Cao');
-//         expect(authorBooks.length).toBe(2);
-//         expect(authorBooks).toEqual(
-//             expect.arrayContaining([
-//                 expect.objectContaining({ title: 'Clean Code' }),
-//                 expect.objectContaining({ title: 'Design Pattern' }),
-//             ])
-//         );
-//     });
+    handleCashPayment(cashPayment, 50);
 
-//     test('should return an empty array when no books match the author', () => {
-//         const authorBooks = search.getBooksByAuthor('Unknown Author');
-//         expect(authorBooks.length).toBe(0);
-//     });
+    expect(console.log).toHaveBeenCalledWith('Processing cash payment of $50');
+    expect(console.error).toHaveBeenCalledWith(
+      new Error('Cannot process cash payment online!')
+    );
+  });
+});
 
-//     test('should return books by publication year', () => {
-//         const booksByYear = search.getBooksByPublicationYear(2022);
-//         expect(booksByYear.length).toBe(1);
-//         expect(booksByYear[0].title).toBe('Design Pattern');
-//     });
+describe('handlePayment', () => {
+  test('should handle payment with CreditCardPayment', () => {
+    const creditCardPayment = new CreditCardPayment();
+    console.log = jest.fn();
 
-//     test('should return an empty array when no books match the publication year', () => {
-//         const booksByYear = search.getBooksByPublicationYear(1999);
-//         expect(booksByYear.length).toBe(0);
-//     });
-// });
+    handlePayment(creditCardPayment, 100);
+
+    expect(console.log).toHaveBeenCalledWith(
+      'Processing credit card payment of $100'
+    );
+  });
+
+  test('should handle payment with PayPalPayment', () => {
+    const payPalPayment = new PayPalPayment();
+    console.log = jest.fn();
+
+    handlePayment(payPalPayment, 200);
+
+    expect(console.log).toHaveBeenCalledWith(
+      'Processing PayPal payment of $200'
+    );
+  });
+});
