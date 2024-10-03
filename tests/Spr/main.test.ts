@@ -1,95 +1,59 @@
-// import { Book, Library, BookSearch } from '../../Solid/1.Srp/sample';
+// shapes.test.ts
 
-// describe('Library', () => {
-//     let library: Library;
-//     let book1: Book;
-//     let book2: Book;
+import {
+  Shape,
+  Circle,
+  Rectangle,
+  Triangle,
+  Shapes,
+  Employee,
+  FullTimeEmployee,
+  PartTimeEmployee,
+  InternEmployee,
+} from '../../Solid/2.Ocp/main';
 
-//     beforeEach(() => {
-//         library = new Library();
-//         book1 = new Book('Clean Code', 'Edric Cao', 2023);
-//         book2 = new Book('Design Pattern', 'Edric Cao', 2022);
-//     });
+// Test cho Shapes và các hình dạng
+describe('Shape Classes', () => {
+  test('Circle should calculate area correctly', () => {
+    const circle = new Circle(5);
+    expect(circle.calculateArea()).toBeCloseTo(78.54, 2);
+  });
 
-//     test('should add a book to the library', () => {
-//         library.addBook(book1);
-//         expect(library.getListBooks()).toContain(book1);
-//     });
+  test('Rectangle should calculate area correctly', () => {
+    const rectangle = new Rectangle(4, 5);
+    expect(rectangle.calculateArea()).toBe(20);
+  });
 
-//     test('should remove a book by title from the library', () => {
-//         library.addBook(book1);
-//         library.addBook(book2);
-//         library.removeBook('Clean Code');
-//         expect(library.getListBooks()).not.toContain(book1);
-//         expect(library.getListBooks()).toContain(book2);
-//     });
+  test('Triangle should calculate area correctly', () => {
+    const triangle = new Triangle(3);
+    expect(triangle.calculateArea()).toBe(4.5);
+  });
 
-//     test('should not remove any book if title not found', () => {
-//         library.addBook(book1);
-//         library.removeBook('Nonexistent Book');
-//         expect(library.getListBooks().length).toBe(1);
-//         expect(library.getListBooks()).toContain(book1);
-//     });
+  test('Shapes should calculate total area correctly', () => {
+    const shapes: Shape[] = [
+      new Circle(5),
+      new Rectangle(4, 5),
+      new Triangle(3),
+    ];
+    const shapesInstance = new Shapes(shapes);
+    expect(shapesInstance.calculateArea()).toBeCloseTo(103.04, 2);
+  });
+});
 
-//     test('should return the total number of books in the library', () => {
-//         library.addBook(book1);
-//         library.addBook(book2);
-//         expect(library.getListBooks().length).toBe(2);
-//     });
+// Test cho Employee và các loại nhân viên
+describe('Employee Classes', () => {
+  test('FullTimeEmployee should calculate salary correctly', () => {
+    const fullTimeEmployee = new FullTimeEmployee('Alice');
+    expect(fullTimeEmployee.calculateSalary()).toBe(5000);
+  });
 
-//     test('should return an empty list when no books are added', () => {
-//         expect(library.getListBooks().length).toBe(0);
-//     });
-// });
+  test('PartTimeEmployee should calculate salary correctly', () => {
+    const partTimeEmployee = new PartTimeEmployee('Charlie');
+    expect(partTimeEmployee.calculateSalary()).toBe(3000);
+  });
 
-// describe('BookSearch', () => {
-//     let books: Book[];
-//     let search: BookSearch;
-
-//     beforeEach(() => {
-//         books = [
-//             new Book('Clean Code', 'Edric Cao', 2023),
-//             new Book('Design Pattern', 'Edric Cao', 2022),
-//             new Book('Refactoring', 'Martin Fowler', 2018),
-//         ];
-//         search = new BookSearch(books);
-//     });
-
-//     test('should find a book by title', () => {
-//         const book = search.getBookByTitle('Clean Code');
-//         expect(book).toBeDefined();
-//         expect(book?.author).toBe('Edric Cao');
-//     });
-
-//     test('should return undefined when no book matches the title', () => {
-//         const book = search.getBookByTitle('Nonexistent Book');
-//         expect(book).toBeUndefined();
-//     });
-
-//     test('should return books by author', () => {
-//         const authorBooks = search.getBooksByAuthor('Edric Cao');
-//         expect(authorBooks.length).toBe(2);
-//         expect(authorBooks).toEqual(
-//             expect.arrayContaining([
-//                 expect.objectContaining({ title: 'Clean Code' }),
-//                 expect.objectContaining({ title: 'Design Pattern' }),
-//             ])
-//         );
-//     });
-
-//     test('should return an empty array when no books match the author', () => {
-//         const authorBooks = search.getBooksByAuthor('Unknown Author');
-//         expect(authorBooks.length).toBe(0);
-//     });
-
-//     test('should return books by publication year', () => {
-//         const booksByYear = search.getBooksByPublicationYear(2022);
-//         expect(booksByYear.length).toBe(1);
-//         expect(booksByYear[0].title).toBe('Design Pattern');
-//     });
-
-//     test('should return an empty array when no books match the publication year', () => {
-//         const booksByYear = search.getBooksByPublicationYear(1999);
-//         expect(booksByYear.length).toBe(0);
-//     });
-// });
+  test('InternEmployee should calculate salary correctly', () => {
+    const internEmployee = new InternEmployee('Bob');
+    expect(internEmployee.calculateSalary()).toBe(1000);
+  });
+});
