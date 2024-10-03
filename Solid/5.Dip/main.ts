@@ -8,23 +8,28 @@
  * Happy coding! 🚀
  */
 
-// class EmailService {
-//     sendEmail(message: string): void {
-//         console.log(`Sending email with message: ${message}`);
-//     }
-// }
+interface SendMailService {
+  sendEmail(message: string): void;
+}
 
-// class SendNotification {
-//     private emailService: EmailService;
+export class EmailService implements SendMailService {
+  sendEmail(message: string): void {
+    console.log(`Sending email with message: ${message}`);
+  }
+}
 
-//     constructor() {
-//         this.emailService = new EmailService();
-//     }
+export class SendNotification {
+  private sendMailService: SendMailService;
 
-//     sendNotification(message: string): void {
-//         this.emailService.sendEmail(message);
-//     }
-// }
+  constructor(sendMailService: SendMailService) {
+    this.sendMailService = sendMailService;
+  }
 
-// const notification = new SendNotification();
-// notification.sendNotification("Hello, this is a notification!");
+  sendNotification(message: string): void {
+    this.sendMailService.sendEmail(message);
+  }
+}
+
+const emailService = new EmailService();
+const notification = new SendNotification(emailService);
+notification.sendNotification('Hello, this is a notification!');
